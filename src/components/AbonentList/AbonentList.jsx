@@ -1,11 +1,25 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchContacts } from '../../redux/contactsOperations';
 import { Item } from 'components/Item/Item';
 import { AbonentListUl } from './AbonentList.styled';
-const shortid = require('shortid');
+import {
+  getContacts,
+  getFilter,
+  getIsLoading,
+  getError,
+} from '../../redux/selectors';
 
 export const ItemList = () => {
-  const contacts = useSelector(state => state.contacts.contacts);
-  const filterValue = useSelector(state => state.filter);
+  const contacts = useSelector(getContacts);
+  const filterValue = useSelector(getFilter);
+  const isLoading = useSelector(getIsLoading);
+  const error = useSelector(getError);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
   const getVisibleContact = () => {
     const normalizedFilter = filterValue.toLowerCase();
 
@@ -17,13 +31,19 @@ export const ItemList = () => {
   let visibleItems = getVisibleContact();
 
   return (
-    <div>
-      <AbonentListUl>
-        {visibleItems.map(contact => {
-          return <Item key={shortid.generate()} contact={contact} />;
-        })}
-      </AbonentListUl>
-    </div>
+    <>
+      {isLoading && <p>Loading contacts...</p>}
+      {error && <p>{error}</p>}
+      {contacts.length > 0 && (
+        <div>
+          <AbonentListUl>
+            {visibleItems.map(item => {
+              return <Item key={item.id} contact={item} />;
+            })}
+          </AbonentListUl>
+        </div>
+      )}
+    </>
   );
 };
 

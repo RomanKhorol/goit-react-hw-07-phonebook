@@ -2,13 +2,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { InputList, Label, Button } from './AddAbonentForm.styled';
 import styled from 'styled-components';
 import { Formik, Form, Field } from 'formik';
-import { addContact } from '../../redux/contactSlice';
-const shortid = require('shortid');
+import { addContact } from '../../redux/contactsOperations';
 
 const initialValues = {
   name: '',
-  number: '',
-  id: '',
+  phone: '',
 };
 const Input = styled(Field)`
   margin-left: auto;
@@ -22,18 +20,16 @@ const Input = styled(Field)`
 `;
 export const AddForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts.contacts);
+  const contacts = useSelector(state => state.contacts.items);
 
-  const hendleSubmit = ({ name, number, id }, { resetForm }) => {
-    id = shortid.generate();
-
+  const hendleSubmit = ({ name, phone }, { resetForm }) => {
     const existContact = contacts.find(
       contact => contact.name.toLowerCase() === name.toLowerCase()
     );
     if (existContact) {
       resetForm();
       return alert(`${name} is already in contacts`);
-    } else dispatch(addContact({ name, number, id }));
+    } else dispatch(addContact({ name, phone }));
 
     resetForm();
   };
@@ -53,10 +49,10 @@ export const AddForm = () => {
               />
             </li>
             <li>
-              <Label htmlFor="number">Number</Label>
+              <Label htmlFor="phone">Number</Label>
               <Input
                 type="tel"
-                name="number"
+                name="phone"
                 pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
                 title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
                 required
