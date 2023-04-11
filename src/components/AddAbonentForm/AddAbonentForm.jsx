@@ -1,8 +1,9 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { InputList, Label, Button } from './AddAbonentForm.styled';
 import styled from 'styled-components';
 import { Formik, Form, Field } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
+import { InputList, Label, Button } from './AddAbonentForm.styled';
 import { addContact } from '../../redux/contactsOperations';
+import { getContacts } from 'redux/selectors';
 
 const initialValues = {
   name: '',
@@ -20,7 +21,7 @@ const Input = styled(Field)`
 `;
 export const AddForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts.items);
+  const contacts = useSelector(getContacts);
 
   const hendleSubmit = ({ name, phone }, { resetForm }) => {
     const existContact = contacts.find(

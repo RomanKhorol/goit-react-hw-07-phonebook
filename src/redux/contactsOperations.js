@@ -8,7 +8,7 @@ export const fetchContacts = createAsyncThunk(
       const contacts = await contactsShelfAPI.fetchContacts();
       return contacts;
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -17,6 +17,7 @@ export const addContact = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const response = await contactsShelfAPI.addContact(data);
+
       return response;
     } catch (e) {
       return rejectWithValue(e.message);
@@ -25,7 +26,7 @@ export const addContact = createAsyncThunk(
 );
 
 export const deleteContact = createAsyncThunk(
-  'contacts/addContacts',
+  'contacts/deleteContacts',
   async (id, { rejectWithValue }) => {
     try {
       const response = await contactsShelfAPI.deleteContact(id);
